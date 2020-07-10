@@ -23,6 +23,8 @@ router.post('/', async (req, res) => {
   }
 })
 
+
+// ! SQLite Error
 router.post('/:id/comments', async (req, res) => {
   const id = req.params.id
   const text = req.body.text
@@ -42,7 +44,6 @@ router.post('/:id/comments', async (req, res) => {
     console.log(err)
     res.status(500).json({ errorMessage: 'There was an error while saving the comment to the database.' })
   }
-
 })
 
 router.get('/', async (req, res) => {
@@ -57,6 +58,22 @@ router.get('/', async (req, res) => {
   } catch (err) {
     console.log(err)
     res.status(500).json({ errorMessage: `Server error: ${err}` })
+  }
+})
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params
+  const post = await db.findById(id)
+
+  try {
+    if (post) {
+      res.status(200).json({ data: post })
+    } else {
+      res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ error: 'The post information could not be retrieved.' })
   }
 })
 
