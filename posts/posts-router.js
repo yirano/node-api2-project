@@ -103,6 +103,7 @@ router.delete('/:id', async (req, res) => {
   try {
     if (post) {
       const deleted = await db.remove(id)
+      res.status(200).json({ message: 'Delete successful' })
     } else {
       res.status(404).json({ message: 'The post with the specified ID does not exist.' })
     }
