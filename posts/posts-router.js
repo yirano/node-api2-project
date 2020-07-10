@@ -24,11 +24,9 @@ router.post('/', async (req, res) => {
   }
 })
 
-
-// ! SQLite Error
 router.post('/:id/comments', async (req, res) => {
   const id = req.params.id
-  const text = req.body.text
+  const text = { ...req.body, post_id: id }
   try {
     if (text) {
       const posts = await db.findById(id)
