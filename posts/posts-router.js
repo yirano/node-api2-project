@@ -6,6 +6,7 @@ const router = express.Router()
 
 router.post('/', async (req, res) => {
   const blogPost = req.body
+  console.log(blogPost)
   try {
     if (blogPost.title && blogPost.contents) {
       const posted = await db.insert(blogPost)
