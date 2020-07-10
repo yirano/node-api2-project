@@ -23,6 +23,28 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.post('/:id/comments', async (req, res) => {
+  const id = req.params.id
+  const text = req.body.text
+  try {
+    if (text) {
+      const posts = await db.findById(id)
+      if (posts) {
+        const postedComment = await db.insertComment(text)
+        res.status(201).json(postedComment)
+      } else {
+        res.status(404).json({ message: 'The post with the specified ID does not exist.' })
+      }
+    } else {
+      res.status(400).json({ errorMessage: 'Please provide text for the comment.' })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ errorMessage: 'There was an error while saving the comment to the database.' })
+  }
+
+})
+
 router.get('/', async (req, res) => {
   const posts = await db.find()
 
@@ -34,7 +56,26 @@ router.get('/', async (req, res) => {
     }
   } catch (err) {
     console.log(err)
-    res.status(500).json({ errorMessage: `Something went wrong: ${err}` })
+    res.status(500).json({ errorMessage: `Server error: ${err}` })
+  }
+})
+
+router.get('/:id/comments', async (req, res) => {
+  const id = req.params.id
+  const posts = await db.findById(id)
+
+  try {
+    if (posts) {
+      const comments = await db.findPostComments(id)
+      if (comments) {
+        res.status(200).json({ data: comments })
+      }
+    } else {
+      res.status(404).json({ errorMessage: 'The post requested cannot be found' })
+    }
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({ errorMessage: `Server error: ${err}` })
   }
 })
 
