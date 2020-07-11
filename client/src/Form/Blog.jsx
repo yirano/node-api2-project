@@ -1,11 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import Axios from 'axios'
+import styled from 'styled-components'
+
+import Button from '@material-ui/core/Button'
 
 const Blog = () => {
   const [post, setPost] = useState({})
   const handleSubmit = e => {
-    console.log(post)
     Axios.post('http://localhost:8000/api/posts', post)
       .then(res => {
         console.log(res)
@@ -19,7 +21,7 @@ const Blog = () => {
     <form onSubmit={handleSubmit}>
       <input type='text' name='title' value={post.title} onChange={e => handleChange(e)} />
       <input type='text' name='contents' value={post.contents} onChange={e => handleChange(e)} />
-      <input type='submit' />
+      <Button onClick={handleSubmit}>Submit</Button>
     </form>
   )
 }
